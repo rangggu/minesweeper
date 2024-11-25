@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit"
-import mineReducer from "../slices/mine/index"
+import controlReducer from "../slices/control/index"
 
 const reducer = combineReducers({
-  mine: mineReducer,
+  control: controlReducer,
 })
 
 export default reducer

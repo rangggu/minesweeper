@@ -3,9 +3,9 @@ import reducer from "./reducer/reducer"
 
 const loadState = () => {
   try {
-    const serializedState = localStorage.getItem("mine")
+    const serializedState = localStorage.getItem("control")
     if (serializedState) {
-      return { mine: JSON.parse(serializedState) }
+      return { control: JSON.parse(serializedState) }
     }
   } catch (err) {
     console.error(err)
@@ -23,8 +23,8 @@ const store = configureStore({
 store.subscribe(() => {
   const state = store.getState()
   try {
-    const serializedState = JSON.stringify(state.mine)
-    localStorage.setItem("mine", serializedState)
+    const serializedState = JSON.stringify(state.control)
+    localStorage.setItem("control", serializedState)
   } catch (err) {
     console.error(err)
   }

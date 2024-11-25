@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {}
 
 export const surveySlice = createSlice({
-  name: "mine",
+  name: "control",
   initialState,
   reducers: {},
 })
