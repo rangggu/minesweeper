@@ -35,11 +35,10 @@ export const controlSlice = createSlice({
   reducers: {
     leftClickCell(state, action: PayloadAction<CellPosition>) {
       const { row, col } = action.payload
-      const cellState = state.board[row][col]
 
       // 게임 상태가 READY 이고 첫 클릭 셀에 지뢰가 있으면
       if (state.status === STATUS.READY) {
-        if (cellState === CELL_STATE.MINE) {
+        if (state.board[row][col] === CELL_STATE.MINE) {
           const { board, mines } = initialArray(state.width, state.height, state.mineCount, row, col)
           // 지뢰 재배치
           state.board = board
@@ -51,25 +50,25 @@ export const controlSlice = createSlice({
       }
 
       if (
-        cellState === CELL_STATE.OPENED_NUMBER ||
-        cellState === CELL_STATE.OPENED_EMPTY ||
-        cellState === CELL_STATE.OPENED_MINE
+        state.board[row][col] === CELL_STATE.OPENED_NUMBER ||
+        state.board[row][col] === CELL_STATE.OPENED_EMPTY ||
+        state.board[row][col] === CELL_STATE.OPENED_MINE
       ) {
         return
       }
 
       // 지뢰 클릭
-      if (cellState === CELL_STATE.MINE) {
+      if (state.board[row][col] === CELL_STATE.MINE) {
         state.board[row][col] = CELL_STATE.OPENED_MINE
         // GAMEOVER
         state.status = STATUS.GAMEOVER
       }
       // 숫자 클릭
-      else if (cellState === CELL_STATE.NUMBER) {
+      else if (state.board[row][col] === CELL_STATE.NUMBER) {
         state.board[row][col] = CELL_STATE.OPENED_NUMBER
       }
       // 빈 칸 클릭
-      else if (cellState === CELL_STATE.EMPTY) {
+      else if (state.board[row][col] === CELL_STATE.EMPTY) {
         state.board = openCells(row, col, state.board, state.mines)
         state.board[row][col] = CELL_STATE.OPENED_EMPTY
       }
