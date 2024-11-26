@@ -1,12 +1,16 @@
+import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../hooks/redux"
-import { leftClickCell, rightClickCell } from "../../store/slices/control"
-import { calculateCellSize, createArray } from "../../utils/utils"
+import { leftClickCell, openAllCell, rightClickCell } from "../../store/slices/control"
+import { STATUS } from "../../types/constants"
+import { calculateCellSize, cn, createArray } from "../../utils/utils"
 import Cell from "./Cell"
 
 export default function Board() {
   const width = useAppSelector((state) => state.control.width)
   const height = useAppSelector((state) => state.control.height)
   const board = useAppSelector((state) => state.control.board)
+  const status = useAppSelector((state) => state.control.status)
+
   const dispatch = useAppDispatch()
 
   const initialArray = createArray(width * height, null)
@@ -21,8 +25,19 @@ export default function Board() {
     dispatch(rightClickCell({ row, col }))
   }
 
+  useEffect(() => {
+    if (status === STATUS.GAMEOVER) {
+      dispatch(openAllCell())
+    }
+  }, [status])
+
   return (
-    <div className="flex items-center justify-center w-[500px] h-[564px] mt-auto bg-gray-800 rounded">
+    <div
+      className={cn(
+        "flex items-center justify-center w-[500px] h-[564px] mt-auto bg-gray-800 rounded",
+        status === STATUS.GAMEOVER && "pointer-events-none",
+      )}
+    >
       <div
         className="grid"
         style={{ gridTemplateRows: `repeat(${height}, ${side}px)`, gridTemplateColumns: `repeat(${width}, ${side}px)` }}

@@ -55,9 +55,13 @@ export const controlSlice = createSlice({
         return
       }
 
+      // RUN
+      state.status = STATUS.RUN
+
       // 지뢰 클릭
       if (cellState === CELL_STATE.MINE) {
         state.board[row][col] = CELL_STATE.OPENED_MINE
+        // GAMEOVER
         state.status = STATUS.GAMEOVER
       }
       // 숫자 클릭
@@ -69,8 +73,6 @@ export const controlSlice = createSlice({
         state.board = openCells(row, col, state.board, state.mines)
         state.board[row][col] = CELL_STATE.OPENED_EMPTY
       }
-
-      state.status = STATUS.RUN // 게임 상태를 RUN으로 변경
     },
 
     rightClickCell(state, action: PayloadAction<CellPosition>) {
@@ -101,9 +103,28 @@ export const controlSlice = createSlice({
         state.board[row][col] = CELL_STATE.EMPTY
       }
     },
+
+    openAllCell(state) {
+      state.board = state.board.map((row) =>
+        row.map((cell) => {
+          switch (cell) {
+            case CELL_STATE.MINE:
+              return CELL_STATE.OPENED_MINE
+            case CELL_STATE.NUMBER:
+              return CELL_STATE.OPENED_NUMBER
+            case CELL_STATE.EMPTY:
+              return CELL_STATE.OPENED_EMPTY
+            case CELL_STATE.FLAGGED_MINE:
+              return CELL_STATE.OPENED_MINE
+            default:
+              return cell // 다른 상태는 유지
+          }
+        }),
+      )
+    },
   },
 })
 
-export const { leftClickCell, rightClickCell } = controlSlice.actions
+export const { leftClickCell, rightClickCell, openAllCell } = controlSlice.actions
 
 export default controlSlice.reducer
