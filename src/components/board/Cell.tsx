@@ -1,8 +1,8 @@
-import { MdFlagCircle } from "react-icons/md"
 import { useAppSelector } from "../../hooks/redux"
 import { CELL_STATE } from "../../types/constants"
-import { FaBomb } from "react-icons/fa6"
+import { FaBomb, FaFlag } from "react-icons/fa6"
 import { cn } from "../../utils/utils"
+import { BiSolidBomb } from "react-icons/bi"
 
 interface ICellProps {
   row: number
@@ -31,10 +31,10 @@ export default function Cell(props: ICellProps) {
 
       case CELL_STATE.FLAGGED_MINE:
       case CELL_STATE.FLAGGED_NON_MINE:
-        return <MdFlagCircle className="w-5 h-5" />
+        return <FaFlag className="relative top-[1px] w-4 h-4 text-pink-600" />
 
       case CELL_STATE.OPENED_MINE:
-        return <FaBomb className="relative top-[1px] w-5 h-5 -rotate-45 text-black" />
+        return <BiSolidBomb className="relative top-[1px] w-6 h-6 -rotate-45 text-black" />
 
       case CELL_STATE.OPENED_NUMBER:
         return mines[row][col]
@@ -50,7 +50,7 @@ export default function Cell(props: ICellProps) {
   return (
     <div
       className={cn(
-        "relative border-2 border-gray-400 cursor-default",
+        "relative border-2 border-gray-400 cursor-default bg-gray-700",
         OPENED ? "bg-gray-500" : "hover:bg-gray-600",
         cellState === CELL_STATE.OPENED_NUMBER && "text-pink-100 text-xl",
         row !== 0 && "border-t-0",

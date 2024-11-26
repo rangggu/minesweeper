@@ -22,7 +22,7 @@ export default function Board() {
   }
 
   return (
-    <div className="flex items-center justify-center w-[500px] h-[564px] mt-auto">
+    <div className="flex items-center justify-center w-[500px] h-[564px] mt-auto bg-gray-800 rounded">
       <div
         className="grid"
         style={{ gridTemplateRows: `repeat(${height}, ${side}px)`, gridTemplateColumns: `repeat(${width}, ${side}px)` }}
