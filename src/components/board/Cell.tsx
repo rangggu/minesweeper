@@ -38,7 +38,12 @@ export default function Cell(props: ICellProps) {
         return <FaFlag className="relative top-[1px] w-[18px] h-[18px] text-pink-600" />
 
       case CELL_STATE.OPENED_MINE:
-        return <BiSolidBomb className="relative top-[1px] w-6 h-6 -rotate-45 text-black" />
+        return (
+          <div className="relative top-[1px] w-6 h-6 ">
+            <span className="absolute w-3 h-2 top-3 left-1 bg-gray-400 rounded-full" />
+            <BiSolidBomb className="w-full h-full text-black -rotate-45 z-10" />
+          </div>
+        )
 
       case CELL_STATE.OPENED_NUMBER:
         return mines[row][col]
