@@ -27,7 +27,7 @@ export default function Indicator() {
 
   return (
     <div className="flex items-center h-20 w-full border-2 border-pink-400">
-      <div className="flex flex-col w-24 h-full p-1 border-r-2 border-pink-400">
+      <div className="flex flex-col w-1/5 h-full p-1 border-r-2 border-pink-400">
         <div className="flex items-center gap-1 text-white">
           <FaBurst className="w-3 h-3" />
           <span className="text-xs leading-none">MINE</span>
@@ -38,7 +38,7 @@ export default function Indicator() {
           {padSingleDigit(mineCount - flagCount > 0 ? mineCount - flagCount : 0)}
         </span>
       </div>
-      <div className="flex flex-col w-52 h-full p-1 border-r-2 border-pink-400">
+      <div className="flex flex-col w-2/5 h-full p-1 border-r-2 border-pink-400">
         <div className="flex items-center gap-1 text-white">
           <IoMdTime className="w-3 h-3" />
           <span className="text-xs leading-none">TIME</span>
@@ -49,7 +49,7 @@ export default function Indicator() {
         onClick={() => {
           dispatch(reloadBoard())
         }}
-        className="flex items-center justify-center w-48 h-full p-1 text-[26px] text-pink-500 font-bold hover:bg-white hover:bg-opacity-10"
+        className="flex items-center justify-center w-1/2 h-full p-1 text-[26px] text-pink-500 font-bold hover:bg-white hover:bg-opacity-10"
       >
         {getStatusText(status)}
       </button>

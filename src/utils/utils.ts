@@ -36,3 +36,9 @@ export const calculateCellSize = (
 export const padSingleDigit = (num: number): string => {
   return num < 10 ? `0${num}` : `${num}`
 }
+
+export const getSize = (width: number, height: number) => {
+  const w = width > 24 ? 800 : 500
+  const h = height > 24 ? 764 : 564
+  return { w, h }
+}

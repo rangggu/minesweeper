@@ -33,8 +33,8 @@ export const controlSlice = createSlice({
   name: "control",
   initialState,
   reducers: {
-    leftClickCell(state, action: PayloadAction<CellPosition>) {
-      const { row, col } = action.payload
+    leftClickCell(state, { payload }: PayloadAction<CellPosition>) {
+      const { row, col } = payload
 
       // 게임 상태가 READY 이고 첫 클릭 셀에 지뢰가 있으면
       if (state.status === STATUS.READY) {
@@ -74,8 +74,8 @@ export const controlSlice = createSlice({
       }
     },
 
-    rightClickCell(state, action: PayloadAction<CellPosition>) {
-      const { row, col } = action.payload
+    rightClickCell(state, { payload }: PayloadAction<CellPosition>) {
+      const { row, col } = payload
       const cellState = state.board[row][col]
 
       if (state.status === STATUS.GAMEOVER || state.status === STATUS.SUCCESS) return
@@ -130,9 +130,23 @@ export const controlSlice = createSlice({
       state.flagCount = 0
       state.mineCount = state.mineCount
     },
+
+    setDifficulty(state, { payload }: PayloadAction<{ width: number; height: number; mineCount: number }>) {
+      const { width, height, mineCount } = payload
+
+      state.width = width
+      state.height = height
+      state.mineCount = mineCount
+
+      const { board, mines } = initialArray(width, height, mineCount)
+      state.board = board
+      state.mines = mines
+      state.status = STATUS.READY
+      state.flagCount = 0
+    },
   },
 })
 
-export const { leftClickCell, rightClickCell, openAllCell, reloadBoard } = controlSlice.actions
+export const { leftClickCell, rightClickCell, openAllCell, reloadBoard, setDifficulty } = controlSlice.actions
 
 export default controlSlice.reducer

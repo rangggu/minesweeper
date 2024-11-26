@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../hooks/redux"
 import { leftClickCell, openAllCell, rightClickCell } from "../../store/slices/control"
 import { STATUS } from "../../types/constants"
-import { calculateCellSize, cn, createArray } from "../../utils/utils"
+import { calculateCellSize, cn, createArray, getSize } from "../../utils/utils"
 import Cell from "./Cell"
 
 export default function Board() {
@@ -10,11 +10,11 @@ export default function Board() {
   const height = useAppSelector((state) => state.control.height)
   const board = useAppSelector((state) => state.control.board)
   const status = useAppSelector((state) => state.control.status)
-
   const dispatch = useAppDispatch()
+  const { w, h } = getSize(width, height)
 
   const initialArray = createArray(width * height, null)
-  const side = calculateCellSize(500, 564, height, width)
+  const side = calculateCellSize(w, h, height, width)
 
   const handleLeftClick = (row: number, col: number) => {
     dispatch(leftClickCell({ row, col }))
@@ -33,8 +33,9 @@ export default function Board() {
 
   return (
     <div
+      style={{ width: w, height: h }}
       className={cn(
-        "flex items-center justify-center w-[500px] h-[564px] mt-auto bg-gray-800 rounded",
+        "flex items-center justify-center mt-auto bg-gray-800 rounded",
         status === STATUS.GAMEOVER && "pointer-events-none",
       )}
     >
