@@ -17,12 +17,12 @@ interface CellPosition {
   col: number
 }
 
-const { board, mines } = initialArray(8, 16, 40)
+const { board, mines } = initialArray(16, 16, 40)
 
 const initialState = {
   board: board,
   mines: mines,
-  width: 8,
+  width: 16,
   height: 16,
   status: STATUS.READY,
   flagCount: 0,
@@ -90,12 +90,10 @@ export const controlSlice = createSlice({
 
       // 깃발 꽂기 (지뢰 o)
       if (cellState === CELL_STATE.MINE) {
-        console.log("isMine")
         state.board[row][col] = CELL_STATE.FLAGGED_MINE
       }
       // 깃발 꽂기 (지뢰 x)
       else if (cellState === CELL_STATE.NUMBER || cellState === CELL_STATE.EMPTY) {
-        console.log("not Mine")
         state.board[row][col] = CELL_STATE.FLAGGED_NON_MINE
       }
       // 깃발 제거
