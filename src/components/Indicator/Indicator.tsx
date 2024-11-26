@@ -35,7 +35,7 @@ export default function Indicator() {
         <span // 남은 지뢰 개수
           className="text-4xl text-center mt-1.5 my-auto leading-none font-bold text-pink-100"
         >
-          {padSingleDigit(mineCount - flagCount)}
+          {padSingleDigit(mineCount - flagCount > 0 ? mineCount - flagCount : 0)}
         </span>
       </div>
       <div className="flex flex-col w-52 h-full p-1 border-r-2 border-pink-400">
