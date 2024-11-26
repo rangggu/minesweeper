@@ -45,6 +45,9 @@ export const controlSlice = createSlice({
           state.board = board
           state.mines = mines
         }
+
+        //RUN
+        state.status = STATUS.RUN
       }
 
       if (
@@ -54,9 +57,6 @@ export const controlSlice = createSlice({
       ) {
         return
       }
-
-      // RUN
-      state.status = STATUS.RUN
 
       // 지뢰 클릭
       if (cellState === CELL_STATE.MINE) {
@@ -91,10 +91,12 @@ export const controlSlice = createSlice({
       // 깃발 꽂기 (지뢰 o)
       if (cellState === CELL_STATE.MINE) {
         state.board[row][col] = CELL_STATE.FLAGGED_MINE
+        state.flagCount++
       }
       // 깃발 꽂기 (지뢰 x)
       else if (cellState === CELL_STATE.NUMBER || cellState === CELL_STATE.EMPTY) {
         state.board[row][col] = CELL_STATE.FLAGGED_NON_MINE
+        state.flagCount++
       }
       // 깃발 제거
       else if (cellState === CELL_STATE.FLAGGED_MINE || cellState === CELL_STATE.FLAGGED_NON_MINE) {
@@ -120,9 +122,18 @@ export const controlSlice = createSlice({
         }),
       )
     },
+
+    reloadBoard(state) {
+      const { board, mines } = initialArray(state.width, state.height, state.mineCount)
+      state.board = board
+      state.mines = mines
+      state.status = STATUS.READY
+      state.flagCount = 0
+      state.mineCount = state.mineCount
+    },
   },
 })
 
-export const { leftClickCell, rightClickCell, openAllCell } = controlSlice.actions
+export const { leftClickCell, rightClickCell, openAllCell, reloadBoard } = controlSlice.actions
 
 export default controlSlice.reducer
