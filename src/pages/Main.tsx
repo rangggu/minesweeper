@@ -1,5 +1,14 @@
-export default function Main () {
+import Layout from "../components/layout/Layout"
+import Header from "../components/@common/Header"
+import Indicator from "../components/Indicator/Indicator"
+import Board from "../components/board/Board"
+
+export default function Main() {
   return (
-    <div>메인</div>
+    <Layout>
+      <Header />
+      <Indicator />
+      <Board />
+    </Layout>
   )
 }
