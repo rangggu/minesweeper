@@ -18,15 +18,17 @@ interface CellPosition {
 }
 
 const { board, mines } = initialArray(16, 16, 40)
+const savedDiff = localStorage.getItem("difficulty")
+const parsedDiff = savedDiff ? JSON.parse(savedDiff) : { width: 16, height: 16, mineCount: 40 }
 
 const initialState = {
   board: board,
   mines: mines,
-  width: 16,
-  height: 16,
+  width: parsedDiff.width,
+  height: parsedDiff.height,
   status: STATUS.READY,
   flagCount: 0,
-  mineCount: 40,
+  mineCount: parsedDiff.mineCount,
 }
 
 export const controlSlice = createSlice({
@@ -143,6 +145,9 @@ export const controlSlice = createSlice({
       state.mines = mines
       state.status = STATUS.READY
       state.flagCount = 0
+
+      // 로컬 스토리지 저장
+      localStorage.setItem("difficulty", JSON.stringify({ width, height, mineCount }))
     },
   },
 })

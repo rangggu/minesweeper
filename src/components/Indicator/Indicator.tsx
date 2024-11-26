@@ -23,8 +23,6 @@ export default function Indicator() {
     }
   }
 
-  console.log(status)
-
   return (
     <div className="flex items-center h-20 w-full border-2 border-pink-400">
       <div className="flex flex-col w-1/5 h-full p-1 border-r-2 border-pink-400">
