@@ -110,9 +110,10 @@ export const openCells = (row: number, col: number, board: number[][], mines: nu
     for (const [dRow, dCol] of directions) {
       const newRow = currentRow + dRow
       const newCol = currentCol + dCol
-      const newCellState = board[newRow][newCol]
 
       if (isValidCell(newRow, newCol) && !visited.has(`${newRow},${newCol}`)) {
+        const newCellState = board[newRow][newCol]
+
         // 숫자면 열기
         if (newCellState === CELL_STATE.NUMBER) {
           board[newRow][newCol] = CELL_STATE.OPENED_NUMBER
