@@ -15,9 +15,10 @@ export default function Indicator() {
     switch (status) {
       case STATUS.READY:
       case STATUS.RUN:
-      case STATUS.SUCCESS:
         return "RETRY🎬"
 
+      case STATUS.SUCCESS:
+        return "SUCCESS🎉"
       case STATUS.GAMEOVER:
         return "GAMEOVER😂"
     }

@@ -26,7 +26,7 @@ export default function Board() {
   }
 
   useEffect(() => {
-    if (status === STATUS.GAMEOVER) {
+    if (status === STATUS.GAMEOVER || status === STATUS.SUCCESS) {
       dispatch(openAllCell())
     }
   }, [status])

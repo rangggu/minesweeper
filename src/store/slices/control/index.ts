@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { CELL_STATE, STATUS } from "../../../types/constants"
-import { initialArray, openCells } from "../../../utils/control"
+import { initialArray, isGameSuccess, openCells } from "../../../utils/control"
 
 export interface ControlState {
   board: number[][]
@@ -74,6 +74,11 @@ export const controlSlice = createSlice({
         state.board = openCells(row, col, state.board, state.mines)
         state.board[row][col] = CELL_STATE.OPENED_EMPTY
       }
+
+      // 성공 여부 확인
+      if (isGameSuccess(state.board, state.mines)) {
+        state.status = STATUS.SUCCESS
+      }
     },
 
     rightClickCell(state, { payload }: PayloadAction<CellPosition>) {
@@ -102,6 +107,12 @@ export const controlSlice = createSlice({
       // 깃발 제거
       else if (cellState === CELL_STATE.FLAGGED_MINE || cellState === CELL_STATE.FLAGGED_NON_MINE) {
         state.board[row][col] = CELL_STATE.EMPTY
+        state.flagCount--
+      }
+
+      // 성공 여부 확인
+      if (isGameSuccess(state.board, state.mines)) {
+        state.status = STATUS.SUCCESS
       }
     },
 

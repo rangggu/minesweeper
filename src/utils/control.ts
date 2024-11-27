@@ -128,3 +128,24 @@ export const openCells = (row: number, col: number, board: number[][], mines: nu
 
   return board
 }
+
+// @NOTE : 지뢰 게임 성공 여부를 판단
+export const isGameSuccess = (board: number[][], mines: number[][]) => {
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[row].length; col++) {
+      const cellState = board[row][col]
+      const isMine = mines[row][col] === CELL_STATE.MINE
+
+      // 지뢰인 셀은 깃발로 표시되어야 함
+      if (isMine && cellState !== CELL_STATE.FLAGGED_MINE) {
+        return false
+      }
+
+      // 지뢰가 아닌 셀은 열려 있어야 함
+      if (!isMine && cellState !== CELL_STATE.OPENED_NUMBER && cellState !== CELL_STATE.OPENED_EMPTY) {
+        return false
+      }
+    }
+  }
+  return true
+}
