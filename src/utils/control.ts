@@ -141,7 +141,6 @@ export const isGameSuccess = (board: number[][]): boolean => {
         cellState !== CELL_STATE.OPENED_NUMBER &&
         cellState !== CELL_STATE.OPENED_EMPTY
       ) {
-        console.log(row, col)
         return false
       }
     }
