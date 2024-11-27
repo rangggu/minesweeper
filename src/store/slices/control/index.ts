@@ -8,8 +8,9 @@ export interface ControlState {
   height: number
   status: STATUS
   flagCount: number
-  flaggedCells: { key: string; state: number }[]
   mineCount: number
+  flaggedCells: { key: string; state: number }[]
+  timer: 0
 }
 
 interface CellPosition {
@@ -28,8 +29,9 @@ const initialState: ControlState = {
   height: parsedDiff.height,
   status: STATUS.READY,
   flagCount: 0,
-  flaggedCells: [],
   mineCount: parsedDiff.mineCount,
+  flaggedCells: [],
+  timer: 0,
 }
 
 export const controlSlice = createSlice({
@@ -150,9 +152,18 @@ export const controlSlice = createSlice({
       // 로컬 스토리지 저장
       localStorage.setItem("difficulty", JSON.stringify({ width, height, mineCount }))
     },
+
+    incrementTime(state) {
+      state.timer += 1 // 경과 시간 1초 증가
+    },
+
+    resetTime(state) {
+      state.timer = 0 // 경과 시간 초기화
+    },
   },
 })
 
-export const { leftClickCell, rightClickCell, openAllCell, reloadBoard, setDifficulty } = controlSlice.actions
+export const { leftClickCell, rightClickCell, openAllCell, reloadBoard, setDifficulty, incrementTime, resetTime } =
+  controlSlice.actions
 
 export default controlSlice.reducer

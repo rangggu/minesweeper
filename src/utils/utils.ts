@@ -37,8 +37,18 @@ export const padSingleDigit = (num: number): string => {
   return num < 10 ? `0${num}` : `${num}`
 }
 
+// @NOTE : 보드 width, height 개수에 따라 전체 크기 계산
 export const getSize = (width: number, height: number) => {
   const w = width > 24 ? 800 : 500
   const h = height > 24 ? 764 : 564
   return { w, h }
+}
+
+// @NOTE : 시간 형식 변환
+export const formatTime = (time: number) => {
+  const hours = Math.floor(time / 3600)
+  const minutes = Math.floor((time % 3600) / 60)
+  const seconds = time % 60
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 }

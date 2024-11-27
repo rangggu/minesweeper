@@ -3,8 +3,9 @@ import { IoMdTime } from "react-icons/io"
 import { useAppDispatch, useAppSelector } from "../../hooks/redux"
 import { padSingleDigit } from "../../utils/utils"
 import { STATUS } from "../../types/constants"
-import { reloadBoard } from "../../store/slices/control"
+import { reloadBoard, resetTime } from "../../store/slices/control"
 import { memo, useMemo } from "react"
+import Timer from "../@common/Timer"
 
 export default memo(function Indicator() {
   const dispatch = useAppDispatch()
@@ -35,6 +36,11 @@ export default memo(function Indicator() {
     }
   }, [status])
 
+  const handleReload = () => {
+    dispatch(resetTime()) // 타이머 초기화
+    dispatch(reloadBoard()) // 게임 보드 초기화
+  }
+
   return (
     <div className="flex items-center h-20 w-full border-2 border-pink-400">
       <div className="flex flex-col w-1/5 h-full p-1 border-r-2 border-pink-400">
@@ -53,12 +59,10 @@ export default memo(function Indicator() {
           <IoMdTime className="w-3 h-3" />
           <span className="text-xs leading-none">TIME</span>
         </div>
-        <span className="text-4xl text-center mt-1.5 my-auto leading-none font-bold text-pink-100">00:00:01</span>
+        <Timer />
       </div>
       <button
-        onClick={() => {
-          dispatch(reloadBoard())
-        }}
+        onClick={handleReload}
         className="flex items-center justify-center w-1/2 h-full p-1 text-[26px] text-pink-500 font-bold hover:bg-white hover:bg-opacity-10"
       >
         {getStatusText}
