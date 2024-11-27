@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { CELL_STATE, STATUS } from "../../../types/constants"
-import { initialArray, isGameSuccess, openCells } from "../../../utils/control"
-
+import { initialArray, isGameSuccess, openCells, updateFlagged } from "../../../utils/control"
 export interface ControlState {
   board: number[][]
   mines: number[][]
@@ -9,6 +8,7 @@ export interface ControlState {
   height: number
   status: STATUS
   flagCount: number
+  flaggedCells: { key: string; state: number }[]
   mineCount: number
 }
 
@@ -17,17 +17,18 @@ interface CellPosition {
   col: number
 }
 
-const { board, mines } = initialArray(16, 16, 40)
 const savedDiff = localStorage.getItem("difficulty")
 const parsedDiff = savedDiff ? JSON.parse(savedDiff) : { width: 16, height: 16, mineCount: 40 }
+const { board, mines } = initialArray(parsedDiff.width, parsedDiff.height, parsedDiff.mineCount)
 
-const initialState = {
+const initialState: ControlState = {
   board: board,
   mines: mines,
   width: parsedDiff.width,
   height: parsedDiff.height,
   status: STATUS.READY,
   flagCount: 0,
+  flaggedCells: [],
   mineCount: parsedDiff.mineCount,
 }
 
@@ -51,11 +52,7 @@ export const controlSlice = createSlice({
         state.status = STATUS.RUN
       }
 
-      if (
-        state.board[row][col] === CELL_STATE.OPENED_NUMBER ||
-        state.board[row][col] === CELL_STATE.OPENED_EMPTY ||
-        state.board[row][col] === CELL_STATE.OPENED_MINE
-      ) {
+      if (state.board[row][col] === CELL_STATE.OPENED_NUMBER || state.board[row][col] === CELL_STATE.OPENED_EMPTY) {
         return
       }
 
@@ -76,7 +73,7 @@ export const controlSlice = createSlice({
       }
 
       // 성공 여부 확인
-      if (isGameSuccess(state.board, state.mines)) {
+      if (isGameSuccess(state.board)) {
         state.status = STATUS.SUCCESS
       }
     },
@@ -86,32 +83,27 @@ export const controlSlice = createSlice({
       const cellState = state.board[row][col]
 
       if (state.status === STATUS.GAMEOVER || state.status === STATUS.SUCCESS) return
-      if (
-        cellState === CELL_STATE.OPENED_EMPTY ||
-        cellState === CELL_STATE.OPENED_NUMBER ||
-        cellState === CELL_STATE.OPENED_MINE
-      ) {
+      if (cellState === CELL_STATE.OPENED_EMPTY || cellState === CELL_STATE.OPENED_NUMBER) {
         return
       }
 
-      // 깃발 꽂기 (지뢰 o)
+      // // 깃발 꽂기 (지뢰 o)
       if (cellState === CELL_STATE.MINE) {
         state.board[row][col] = CELL_STATE.FLAGGED_MINE
-        state.flagCount++
+        updateFlagged(state, row, col, cellState, true)
       }
       // 깃발 꽂기 (지뢰 x)
       else if (cellState === CELL_STATE.NUMBER || cellState === CELL_STATE.EMPTY) {
         state.board[row][col] = CELL_STATE.FLAGGED_NON_MINE
-        state.flagCount++
+        updateFlagged(state, row, col, cellState, true)
       }
       // 깃발 제거
       else if (cellState === CELL_STATE.FLAGGED_MINE || cellState === CELL_STATE.FLAGGED_NON_MINE) {
-        state.board[row][col] = CELL_STATE.EMPTY
-        state.flagCount--
+        updateFlagged(state, row, col, cellState, false)
       }
 
       // 성공 여부 확인
-      if (isGameSuccess(state.board, state.mines)) {
+      if (isGameSuccess(state.board)) {
         state.status = STATUS.SUCCESS
       }
     },

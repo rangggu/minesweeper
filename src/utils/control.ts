@@ -1,3 +1,4 @@
+import { ControlState } from "../store/slices/control"
 import { CELL_STATE } from "../types/constants"
 import { createArray2D } from "./utils"
 
@@ -130,22 +131,44 @@ export const openCells = (row: number, col: number, board: number[][], mines: nu
 }
 
 // @NOTE : 지뢰 게임 성공 여부를 판단
-export const isGameSuccess = (board: number[][], mines: number[][]) => {
+export const isGameSuccess = (board: number[][]): boolean => {
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[row].length; col++) {
       const cellState = board[row][col]
-      const isMine = mines[row][col] === CELL_STATE.MINE
 
-      // 지뢰인 셀은 깃발로 표시되어야 함
-      if (isMine && cellState !== CELL_STATE.FLAGGED_MINE) {
-        return false
-      }
-
-      // 지뢰가 아닌 셀은 열려 있어야 함
-      if (!isMine && cellState !== CELL_STATE.OPENED_NUMBER && cellState !== CELL_STATE.OPENED_EMPTY) {
+      if (
+        cellState !== CELL_STATE.FLAGGED_MINE &&
+        cellState !== CELL_STATE.OPENED_NUMBER &&
+        cellState !== CELL_STATE.OPENED_EMPTY
+      ) {
+        console.log(row, col)
         return false
       }
     }
   }
   return true
+}
+
+export const updateFlagged = (
+  state: ControlState,
+  row: number,
+  col: number,
+  cellState: number,
+  incrementFlagCount = true,
+) => {
+  const key = `${row}-${col}`
+  const flaggedCell = state.flaggedCells.find((cell) => cell.key === key)
+
+  if (incrementFlagCount) {
+    if (!flaggedCell) {
+      state.flaggedCells.push({ key, state: cellState })
+    }
+    state.flagCount++
+  } else {
+    if (flaggedCell) {
+      state.board[row][col] = flaggedCell.state as number
+      state.flaggedCells = state.flaggedCells.filter((cell) => cell.key !== key)
+    }
+    state.flagCount--
+  }
 }
