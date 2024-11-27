@@ -148,6 +148,7 @@ export const isGameSuccess = (board: number[][]): boolean => {
   return true
 }
 
+// @NOTE : 깃발 업데이트
 export const updateFlagged = (
   state: ControlState,
   row: number,

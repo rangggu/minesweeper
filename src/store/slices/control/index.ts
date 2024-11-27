@@ -47,8 +47,6 @@ export const controlSlice = createSlice({
           state.board = board
           state.mines = mines
         }
-
-        //RUN
         state.status = STATUS.RUN
       }
 
@@ -121,7 +119,7 @@ export const controlSlice = createSlice({
             case CELL_STATE.FLAGGED_MINE:
               return CELL_STATE.OPENED_MINE
             default:
-              return cell // 다른 상태는 유지
+              return cell
           }
         }),
       )

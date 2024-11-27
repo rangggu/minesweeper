@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import { IoClose } from "react-icons/io5"
 import { cn } from "../../utils/utils"
 import { useDispatch } from "react-redux"
 import { setDifficulty } from "../../store/slices/control"
 
-export default function Header() {
+export default memo(function Header() {
   const [open, setOpen] = useState<boolean>(false)
   const [custom, setCustom] = useState<boolean>(false)
   const [width, setWidth] = useState<number>(0)
@@ -12,11 +12,15 @@ export default function Header() {
   const [mine, setMine] = useState<number>(0)
   const dispatch = useDispatch()
 
-  const setDiff = (width: number, height: number, mineCount: number) => {
-    setOpen(false)
-    setCustom(false)
-    dispatch(setDifficulty({ width: width, height: height, mineCount: mineCount }))
-  }
+  // @NOTE : 난이도 설정 및 메뉴 닫기
+  const setDiff = useCallback(
+    (width: number, height: number, mineCount: number) => {
+      setOpen(false)
+      setCustom(false)
+      dispatch(setDifficulty({ width, height, mineCount }))
+    },
+    [dispatch],
+  )
 
   useEffect(() => {
     if (width && height && mine) {
@@ -27,7 +31,7 @@ export default function Header() {
   return (
     <div className="flex items-center justify-between w-full h-10 px-1 border-2 border-pink-400 rounded-t-md z-10">
       <div className="relative">
-        <button
+        <button // 설정
           className={cn("px-5 py-0.5 h-7 text-white hover:bg-gray-600 text-xs", open && "bg-gray-600")}
           onClick={() => {
             setOpen(!open)
@@ -37,7 +41,7 @@ export default function Header() {
           Setting
         </button>
         {open && (
-          <ul
+          <ul // 난이도 선택창
             className={cn(
               "absolute -bottom-32 left-0 flex flex-col w-full h-32 bg-gray-600 text-xs text-white list-none",
               custom && "-bottom-48 h-48",
@@ -108,4 +112,4 @@ export default function Header() {
       </button>
     </div>
   )
-}
+})

@@ -4,6 +4,7 @@ import { FaFlag } from "react-icons/fa6"
 import { cn } from "../../utils/utils"
 import { BiSolidBomb } from "react-icons/bi"
 import { IoClose } from "react-icons/io5"
+import { memo, useMemo } from "react"
 
 interface ICellProps {
   row: number
@@ -15,31 +16,37 @@ interface ICellProps {
   onRightClick: (event: React.MouseEvent) => void
 }
 
-export default function Cell(props: ICellProps) {
+export default memo(function Cell(props: ICellProps) {
   const { row, col, width, height, cellState, onLeftClick, onRightClick } = props
+
+  // @NOTE : 렌더링 최적화를 위해 따로 선언
   const mines = useAppSelector((state) => state.control.mines)
   const status = useAppSelector((state) => state.control.status)
-  const OPENED =
-    cellState === CELL_STATE.OPENED_EMPTY ||
-    cellState === CELL_STATE.OPENED_MINE ||
-    cellState === CELL_STATE.OPENED_NUMBER
 
-  const getCellText = (state: CELL_STATE) => {
-    switch (state) {
+  // @NOTE : 셀의 열림 여부
+  const OPENED = useMemo(
+    () =>
+      cellState === CELL_STATE.OPENED_EMPTY ||
+      cellState === CELL_STATE.OPENED_MINE ||
+      cellState === CELL_STATE.OPENED_NUMBER,
+    [cellState],
+  )
+
+  // @NOTE : 셀 상태에 따른 내용 반환
+  const cellText = useMemo(() => {
+    switch (cellState) {
       case CELL_STATE.EMPTY:
       case CELL_STATE.NUMBER:
       case CELL_STATE.MINE:
         return ""
 
       case CELL_STATE.FLAGGED_MINE:
-        return <FaFlag className="relative top-[1px] w-[18px] h-[18px] text-pink-600" />
-
       case CELL_STATE.FLAGGED_NON_MINE:
         return <FaFlag className="relative top-[1px] w-[18px] h-[18px] text-pink-600" />
 
       case CELL_STATE.OPENED_MINE:
         return (
-          <div className="relative top-[1px] w-6 h-6 ">
+          <div className="relative top-[1px] w-6 h-6">
             <span className="absolute w-3 h-2 top-3 left-1 bg-gray-400 rounded-full" />
             <BiSolidBomb className="w-full h-full text-black -rotate-45 z-10" />
           </div>
@@ -54,7 +61,7 @@ export default function Cell(props: ICellProps) {
       default:
         return "?"
     }
-  }
+  }, [cellState, mines, row, col])
 
   return (
     <div
@@ -71,13 +78,15 @@ export default function Cell(props: ICellProps) {
       onContextMenu={onRightClick}
     >
       <div className="absolute flex items-center justify-center w-full h-full">
-        {getCellText(cellState)}
+        {cellText}
         {status === STATUS.GAMEOVER && cellState === CELL_STATE.FLAGGED_NON_MINE && (
-          <div className="absolute flex items-center justify-center w-full h-full">
+          <div // 게임 오버 시 잘못된 깃발 표시
+            className="absolute flex items-center justify-center w-full h-full"
+          >
             <IoClose className="relative top-[1px] w-6 h-6 text-pink-100" />
           </div>
         )}
       </div>
     </div>
   )
-}
+})
