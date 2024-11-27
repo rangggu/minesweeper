@@ -20,7 +20,7 @@ export default function Header() {
 
   useEffect(() => {
     if (width && height && mine) {
-      setDiff(width, height, mine)
+      dispatch(setDifficulty({ width: width, height: height, mineCount: mine }))
     }
   }, [width, height, mine])
 
@@ -90,7 +90,12 @@ export default function Header() {
                     className="w-6 h-6 text-center bg-transparent hover:bg-gray-400 focus:bg-gray-400"
                     type="number"
                     value={mine}
-                    onChange={(e) => setMine(Number(e.target.value))}
+                    onChange={(e) => {
+                      const mine = Number(e.target.value)
+                      if (mine <= (width * height) / 3) {
+                        setMine(mine)
+                      }
+                    }}
                   />
                 </div>
               </>
